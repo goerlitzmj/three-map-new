@@ -49,21 +49,13 @@
             geoapifyLng = response.data.features[0].geometry.coordinates[0];
 
             fetch(
-            //'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_populated_places_simple.geojson'
-            //'ne_110m_populated_places_simple.geojson'
-            //'countries.geojson'
             'ne_110m_admin_0_countries.geojson'
-
-            //'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_admin_0_countries.geojson // for tiles
-            //'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_populated_places_simple.geojson' // for more cities
           ).then(res => res.json()).then(cities =>
             {
 
               const N = 50;
               var i = 0;
               var j = 0;
-
-              //const heartSVG = `<svg style="color: red" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16"> <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" fill="red"></path></svg>`;
 
               const heartSVG = `<svg viewBox="-4 0 36 36">
                 <path fill="currentColor" d="M14,0 C21.732,0 28,5.641 28,12.6 C28,23.963 14,36 14,36 C14,36 0,24.064 0,12.6 C0,5.641 6.268,0 14,0 Z"></path>
@@ -77,16 +69,9 @@
               }));
 
               const Globe = new ThreeGlobe()
-                //.globeImageUrl('https://unpkg.com/three-globe/example/img/earth-dark.jpg')
-                //.atmosphereColor('#006994')
-                //.atmosphereAltitude('0.5')
                 .hexPolygonsData(cities.features.filter(d => d.properties.ISO_A2 !== 'AQ'))
-                //.hexPolygonColor(() => 'rgba(104,189,86,1.00)')
                 .hexPolygonColor(() => 'rgba(104, 138, 86, 1)')
                 .showGlobe(true)
-                //.hexPolygonAltitude(0)
-                //.globeMaterial(new THREE.MeshPhysicalMaterial({color: '#006994'}));
-                //.globeMaterial(new THREE.MeshPhysicalMaterial({color: 'rgba(0, 105, 191, 1)'}));
                 .htmlElementsData(htmlData)
                 .htmlElement(d => {
                   const el = document.createElement('div');
@@ -95,38 +80,13 @@
                   el.style.width = `${d.size}px`
                   return el;
                 })
-                .globeMaterial(new THREE.MeshPhysicalMaterial({color: //'#C5EBFF'}));
-                  //'#BBDFF2'}));
-                  '#A8D4EA'}));
+                .globeMaterial(new THREE.MeshPhysicalMaterial({color:'#A8D4EA'}));
 
-
-
-
-                /*
-                .labelsData(newGData)
-                //.labelText(d => `${d.name}`)
-                .labelText(d => ``)
-                .labelSize('size')
-                .labelDotRadius(d => d.size / 4)
-                .labelColor('color');
-                */
-
-                //.labelColor(() => `#0xff00ff`)
-                //.hexPolygonsData(cities.features)
-                //.hexPolygonResolution(4)
-                //.hexPolygonMargin(0.3)
-                //.hexPolygonColor(
-                  //() => `#${Math.round(Math.random() * Math.pow(2, 24)).toString(16).padStart(6, '0')}`
-                //  () => `#00ff00`
-                //);
-
-              // Setup renderer
               const renderers = [new THREE.WebGLRenderer(), new THREE.CSS2DRenderer()];
               renderers.forEach(
                 (r, idx) => {
                   r.setSize(window.innerWidth, window.innerHeight);
                   if (idx > 0) {
-                    // overlay additional on top of main renderer
                     r.domElement.style.position = 'absolute';
                     r.domElement.style.top = '0px';
                     r.domElement.style.pointerEvents = 'none';
@@ -134,15 +94,11 @@
                   document.getElementById('globeViz').appendChild(r.domElement);
                 }
               );
-              //renderer.setSize(window.innerWidth, window.innerHeight);
-              //document.getElementById('globeViz').appendChild(renderer.domElement);
 
-              // Setup scene
               const scene = new THREE.Scene();
               scene.add(Globe);
               scene.add(new THREE.AmbientLight(0xbbbbbb));
 
-              // Setup camera
               const camera = new THREE.PerspectiveCamera();
               camera.aspect = window.innerWidth/ window.innerHeight;
               camera.updateProjectionMatrix();
@@ -162,7 +118,6 @@
 
               const spotLight = new THREE.SpotLight(0xffff00, 60, 66);
               spotLight.position.set(0, 0, 165);
-              //scene.add(spotLight);
 
               const rectLight1 = new THREE.RectAreaLight(0xffff00, 70, 10, 10);
               rectLight1.position.set(120, 0, 145);
@@ -238,21 +193,12 @@
                     } else {
                       zoomedIn = true;
                       if (!added) {
-                        //scene.add( rectLight1 );
-                        //scene.add(rectLight2);
-                        //scene.add(rectLight3);
                         scene.add(spotLight);
                         added = true;
                       }
 
                       if (camera.position.z < 300) {
-                        //rectLight1.position.z += 0.5;
-                        //rectLight2.position.z += 0.5;
-                        //rectLight3.height += 0.218;
-                        //rectLight3.width += 0.218;
-                        //rectLight3.position.z += 0.5;
                         spotLight.distance += 0.015;
-
                         camera.position.z += 0.3;
                       } else {
                         if (spotLight.distance < 200) {
@@ -304,21 +250,12 @@
                       zoomedIn = true;
 
                       if (!added) {
-                        //scene.add( rectLight1 );
-                        //scene.add(rectLight2);
-                        //scene.add(rectLight3);
                         scene.add(spotLight);
                         added = true;
                       }
 
                       if (camera.position.z < 300) {
-                        //rectLight1.position.z += 0.5;
-                        //rectLight2.position.z += 0.5;
-                        //rectLight3.height += 0.218;
-                        //rectLight3.width += 0.218;
-                        //rectLight3.position.z += 0.5;
                         spotLight.distance += 0.015;
-
                         camera.position.z += 0.3;
                       } else {
                         if (spotLight.distance < 200) {
@@ -330,90 +267,6 @@
                   }
                 }
 
-                /*if (
-                  (((-1 * lngPosition) > inputLng + 0.017) ||
-                  ((-1 * lngPosition) < inputLng - 0.017))
-                  && (((latPosition) > inputLat + 0.017)) ||
-                  ((latPosition) < inputLat - 0.017))
-                 {
-                  if (inputLng < 0) {
-                    if (inputLat < 0) {
-                      Globe.rotation.x -= (RAD_DEG / 2);
-                      latPosition = Globe.rotation.x;
-                      Globe.rotation.y += (RAD_DEG / 2);
-                      lngPosition = Globe.rotation.y;
-                    } else {
-                      Globe.rotation.x += (RAD_DEG / 2);
-                      latPosition = Globe.rotation.x;
-                      Globe.rotation.y += (RAD_DEG / 2);
-                      lngPosition = Globe.rotation.y;
-                    }
-                  } else {
-                    if (inputLat < 0) {
-                      Globe.rotation.x -= (RAD_DEG / 2);
-                      latPosition = Globe.rotation.x;
-                      Globe.rotation.y -= (RAD_DEG / 2);
-                      lngPosition = Globe.rotation.y;
-                    } else {
-                      Globe.rotation.x += (RAD_DEG / 2);
-                      latPosition = Globe.rotation.x;
-                      Globe.rotation.y -= (RAD_DEG / 2);
-                      lngPosition = Globe.rotation.y;
-                    }
-                  }
-                }*/
-
-                /*if (
-                  ((-1 * lngPosition) > inputLng + 0.017) ||
-                  ((-1 * lngPosition) < inputLng - 0.017)
-                ) {
-                  if (inputLng < 0) {
-                    Globe.rotation.y += (RAD_DEG / 2);
-                    lngPosition = Globe.rotation.y;
-                  } else {
-                    Globe.rotation.y -= (RAD_DEG / 2);
-                    lngPosition = Globe.rotation.y;
-                  }
-                }*/
-
-                /*if (
-                  ((latPosition) > inputLat + 0.017) ||
-                  ((latPosition) < inputLat - 0.017)
-                ) {
-                  if (inputLat < 0) {
-                    Globe.rotation.x -= (RAD_DEG / 2);
-                    latPosition = Globe.rotation.x;
-                  } else {
-                    Globe.rotation.x += (RAD_DEG / 2);
-                    latPosition = Globe.rotation.x;
-                  }
-                } else {
-                  if (camera.position.z > 140 && !zoomedIn) {
-                    camera.position.z -= 1;
-                  } else {
-                    zoomedIn = true;*/
-
-                    /*if (!added) {
-                      //scene.add( rectLight1 );
-                      //scene.add(rectLight2);
-                      //scene.add(rectLight3);
-                      scene.add(spotLight);
-                      added = true;
-                    }*/
-
-                    /*if (camera.position.z < 300) {
-                      //rectLight1.position.z += 0.5;
-                      //rectLight2.position.z += 0.5;
-                      //rectLight3.height += 0.218;
-                      //rectLight3.width += 0.218;
-                      rectLight3.position.z += 0.5;
-                      camera.position.z += 0.5;
-                    }*/
-
-                  //}
-                //}
-
-                //renderer.render(scene, camera);
                 renderers.forEach(r => r.render(scene, camera));
                 requestAnimationFrame(animate);
               })();
